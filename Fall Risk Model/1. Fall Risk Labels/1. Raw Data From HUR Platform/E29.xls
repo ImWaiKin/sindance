@@ -1,0 +1,14 @@
+Test Name: EE 12/3/2025 - 1
+Person Name: E29 E29
+Person Height: 5' 9"
+Person Weight[lbs]: 154
+Created: 12.03.2025 15:17:53
+Protocol: Stable/Unstable Platform Romberg 30 s
+Perf. time[s]: 30
+Romberg Quotient: RQEdit
+------- Analysis data -------
+Performance Name	Trace Length["]	C90 Area["^2]	C90 Angle[deg]	STD Velocity["/s]	Velocity["/s]	Romberg Quotient	Max X	Min X	Mean X	Standard Dev X	Max Y	Min Y	Mean Y	Standard Dev Y	Left Weight Distribution	Right Weight Distribution
+Eyes Open	13.89	0.56	-84.45	0.32	0.46	117	0.64	-0.11	0.28	0.13	-2.31	-3.67	-2.98	0.30	48.6	51.4	
+Eyes Closed	13.67	0.66	-75.20	0.31	0.46	117	0.51	-0.39	0.23	0.19	-1.83	-3.47	-2.81	0.24	48.9	51.1	
+Eyes Open Unstable	13.47	1.85	-80.40	0.26	0.45	67	1.44	0.22	0.73	0.32	-2.18	-4.08	-3.43	0.40	46.4	53.6	
+Eyes Closed Unstable	15.49	1.25	88.73	0.35	0.52	67	1.04	-0.22	0.41	0.22	-2.40	-4.26	-3.41	0.40	48.0	52.0	

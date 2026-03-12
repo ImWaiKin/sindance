@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd \"/Users/wk/Desktop/1\\. Fall Risk Labels\" && python3 \"4\\. fall_risk_categorization\\.py\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

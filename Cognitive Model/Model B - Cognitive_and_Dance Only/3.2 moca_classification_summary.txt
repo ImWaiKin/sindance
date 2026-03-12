@@ -1,0 +1,22 @@
+MOCA SCORE CLASSIFICATION SUMMARY
+========================================
+
+Total subjects: 81
+MOCA score range: 11 - 30
+Mean MOCA score: 24.96
+Median MOCA score: 27.0
+Standard deviation: 4.38
+
+CLASSIFICATION BREAKDOWN:
+-------------------------
+   Healthy:  51 subjects ( 63.0%)
+      Mild:  23 subjects ( 28.4%)
+  Moderate:   7 subjects (  8.6%)
+    Severe:   0 subjects (  0.0%)
+
+CATEGORY DEFINITIONS:
+--------------------
+Healthy:  MOCA >= 26
+Mild:     MOCA 18-25
+Moderate: MOCA 10-17
+Severe:   MOCA < 10

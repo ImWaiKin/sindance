@@ -1,0 +1,59 @@
+FALL RISK ASSESSMENT CLINICAL REPORT
+==================================================
+
+SUMMARY STATISTICS:
+--------------------
+Total subjects assessed: 81
+Low risk: 45 subjects (55.6%)
+Elevated risk: 36 subjects (44.4%)
+
+ELEVATED-RISK SUBJECTS REQUIRING MONITORING/INTERVENTION:
+-------------------------------------------------------
+Subject E62: Risk Score 1.000
+Subject E53: Risk Score 1.000
+Subject E16: Risk Score 1.000
+Subject E23: Risk Score 1.000
+Subject E19: Risk Score 0.951
+Subject E15: Risk Score 0.844
+Subject E24: Risk Score 0.812
+Subject E20: Risk Score 0.790
+Subject E25: Risk Score 0.748
+Subject E69: Risk Score 0.737
+Subject E45: Risk Score 0.731
+Subject E41: Risk Score 0.726
+Subject E35: Risk Score 0.696
+Subject E04: Risk Score 0.686
+Subject E67: Risk Score 0.631
+Subject E40: Risk Score 0.626
+Subject E07: Risk Score 0.592
+Subject E06: Risk Score 0.549
+Subject E61: Risk Score 0.510
+Subject E14: Risk Score 0.509
+Subject E46: Risk Score 0.504
+Subject E77: Risk Score 0.504
+Subject E27: Risk Score 0.502
+Subject E59: Risk Score 0.477
+Subject E50: Risk Score 0.466
+Subject E64: Risk Score 0.458
+Subject E37: Risk Score 0.452
+Subject E08: Risk Score 0.441
+Subject E11: Risk Score 0.419
+Subject E72: Risk Score 0.416
+Subject E03: Risk Score 0.412
+Subject E29: Risk Score 0.403
+Subject E02: Risk Score 0.395
+Subject E47: Risk Score 0.380
+Subject E33: Risk Score 0.350
+Subject E12: Risk Score 0.338
+
+CLINICAL RECOMMENDATIONS:
+-------------------------
+Elevated Risk Subjects:
+- Comprehensive fall risk assessment
+- Balance training intervention
+- Environmental safety evaluation
+- Quarterly reassessment
+
+Low Risk Subjects:
+- Continue current activity level
+- Routine age-appropriate screening

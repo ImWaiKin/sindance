@@ -1,0 +1,43 @@
+FALL RISK ASSESSMENT CLINICAL REPORT
+==================================================
+
+SUMMARY STATISTICS:
+--------------------
+Total subjects assessed: 81
+Low risk: 45 subjects (55.6%)
+Medium risk: 22 subjects (27.2%)
+High risk: 14 subjects (17.3%)
+
+HIGH-RISK SUBJECTS REQUIRING INTERVENTION:
+----------------------------------------
+Subject E16: Risk Score 1.000
+Subject E23: Risk Score 1.000
+Subject E53: Risk Score 1.000
+Subject E62: Risk Score 1.000
+Subject E19: Risk Score 0.951
+Subject E15: Risk Score 0.844
+Subject E24: Risk Score 0.812
+Subject E20: Risk Score 0.790
+Subject E25: Risk Score 0.748
+Subject E69: Risk Score 0.737
+Subject E45: Risk Score 0.731
+Subject E41: Risk Score 0.726
+Subject E35: Risk Score 0.696
+Subject E04: Risk Score 0.686
+
+CLINICAL RECOMMENDATIONS:
+-------------------------
+High Risk Subjects:
+- Comprehensive fall risk assessment
+- Balance training intervention
+- Environmental safety evaluation
+- Quarterly reassessment
+
+Medium Risk Subjects:
+- Annual balance screening
+- Basic fall prevention education
+- Encourage physical activity
+
+Low Risk Subjects:
+- Continue current activity level
+- Routine age-appropriate screening
