@@ -1,8 +1,8 @@
 """
-Advanced feature extraction module for fall risk prediction.
+Advanced feature extraction module for balance-output modeling.
 
 This module implements sophisticated feature engineering techniques to improve model accuracy
-for fall risk assessment using pose estimation data. The features are organized into several
+for balance assessment using pose estimation data. The features are organized into several
 categories, each capturing different aspects of human movement and postural control:
 
 FEATURE CATEGORIES:
@@ -58,15 +58,15 @@ FEATURE CATEGORIES:
 CLINICAL RELEVANCE:
 ==================
 - Higher asymmetry values indicate potential neurological or musculoskeletal issues
-- Excessive sway metrics suggest poor balance control and increased fall risk
+- Excessive sway metrics suggest poor balance control and poorer balance performance
 - Poor coordination values indicate movement dysfunction
 - High frequency content may indicate tremors or instability
 - Irregular temporal patterns suggest loss of motor control
 
-FALL RISK INTERPRETATION:
-========================
-- LOW RISK: High regularity, low asymmetry, controlled sway, good coordination
-- HIGH RISK: Irregular patterns, high asymmetry, excessive sway, poor coordination
+BALANCE OUTPUT INTERPRETATION:
+==============================
+- LOW BALANCE CONCERN: High regularity, low asymmetry, controlled sway, good coordination
+- HIGH BALANCE CONCERN: Irregular patterns, high asymmetry, excessive sway, poor coordination
 """
 
 import pandas as pd
@@ -83,7 +83,7 @@ warnings.filterwarnings('ignore')
 
 
 class AdvancedFeatureExtractor:
-    """Advanced feature extraction for improved fall risk prediction."""
+    """Advanced feature extraction for improved balance-output modeling."""
     
     def __init__(self):
         """Initialize the advanced feature extractor."""
@@ -124,7 +124,7 @@ class AdvancedFeatureExtractor:
             # com_autocorr_1: First-order autocorrelation of center of mass displacement
             # Measures how predictable the movement is from one time step to the next
             # Higher values indicate more regular, predictable movement patterns
-            # Lower values suggest more erratic, unpredictable movement (potential fall risk)
+            # Lower values suggest more erratic, unpredictable movement (potential balance-control concern)
             features['com_autocorr_1'] = np.corrcoef(com_data[:-1], com_data[1:])[0, 1] if len(com_data) > 1 else 0
             
             # com_trend: Linear trend in center of mass displacement over time
@@ -155,17 +155,17 @@ class AdvancedFeatureExtractor:
         if len(stability_series) > 5:
             # stability_trend: How stability changes over time
             # Positive trend: stability improving over time
-            # Negative trend: stability deteriorating over time (fall risk indicator)
+            # Negative trend: stability deteriorating over time (balance-control indicator)
             features['stability_trend'] = stats.linregress(range(len(stability_series)), stability_series)[0]
             
             # stability_variance: Consistency of stability over time
-            # High variance indicates inconsistent stability (potential fall risk)
+            # High variance indicates inconsistent stability (potential balance-control concern)
             # Low variance suggests consistent postural control
             features['stability_variance'] = np.var(stability_series)
             
             # stability_min: Worst stability moment during the recording
             # Lower values indicate periods of very poor stability
-            # Critical for identifying fall risk episodes
+            # Critical for identifying low-stability episodes
             features['stability_min'] = np.min(stability_series)
         
         return features
@@ -175,7 +175,7 @@ class AdvancedFeatureExtractor:
         Extract frequency domain features using FFT analysis.
         
         These features analyze the frequency content of movement patterns to identify
-        tremors, oscillations, and rhythmic patterns that may indicate fall risk.
+        tremors, oscillations, and rhythmic patterns that may indicate balance-control changes.
         """
         features = {}
         
@@ -223,7 +223,7 @@ class AdvancedFeatureExtractor:
         Extract advanced biomechanical and stability features.
         
         These features analyze body mechanics, postural control, and movement coordination
-        to assess fall risk from a biomechanical perspective.
+        to model measured balance output from a biomechanical perspective.
         """
         features = {}
         
@@ -241,13 +241,13 @@ class AdvancedFeatureExtractor:
         
         # COORDINATION METRICS
         # Analyzes inter-limb coordination and movement synchronization
-        # Poor coordination is a strong predictor of fall risk
+        # Poor coordination is a strong marker of balance-control performance
         coordination_features = self._calculate_coordination_metrics(df)
         features.update(coordination_features)
         
         # POSTURAL SWAY ANALYSIS
         # Measures body sway patterns and postural control
-        # Excessive sway indicates poor balance and increased fall risk
+        # Excessive sway indicates poor balance and poorer balance performance
         sway_features = self._calculate_postural_sway(df)
         features.update(sway_features)
         
@@ -264,7 +264,7 @@ class AdvancedFeatureExtractor:
         Create interaction features from base features.
         
         Interaction features capture non-linear relationships between basic features
-        that may be more predictive of fall risk than individual features alone.
+        that may be more predictive of measured balance output than individual features alone.
         """
         features = {}
         
@@ -301,7 +301,7 @@ class AdvancedFeatureExtractor:
         # MANUALLY CRAFTED IMPORTANT INTERACTIONS
         # velocity_cv: Coefficient of variation for velocity
         # Measures relative variability in movement speed
-        # High CV indicates inconsistent movement patterns (potential fall risk)
+        # High CV indicates inconsistent movement patterns (potential balance-control concern)
         # Low CV suggests more controlled, consistent movement
         if 'mean_velocity' in base_features and 'std_velocity' in base_features:
             features['velocity_cv'] = base_features['std_velocity'] / (base_features['mean_velocity'] + 1e-6)
@@ -459,7 +459,7 @@ class AdvancedFeatureExtractor:
                 
                 # asymmetry: Normalized difference between left and right movement
                 # Values range from 0 (perfect symmetry) to 1 (complete asymmetry)
-                # Higher values indicate greater asymmetry (potential fall risk)
+                # Higher values indicate greater asymmetry (potential balance-control concern)
                 # Calculated as |left - right| / (left + right + epsilon)
                 asymmetry = abs(left_movement - right_movement) / (left_movement + right_movement + 1e-6)
                 features[f'{left_part}_asymmetry'] = asymmetry
@@ -471,7 +471,7 @@ class AdvancedFeatureExtractor:
         Calculate dynamic stability indicators.
         
         Dynamic stability measures how well the body maintains balance during movement.
-        These features are crucial for fall risk assessment as they directly relate
+        These features are crucial for balance assessment as they directly relate
         to the body's ability to maintain upright posture.
         """
         features = {}
@@ -516,7 +516,7 @@ class AdvancedFeatureExtractor:
         Calculate inter-limb coordination metrics.
         
         Coordination between limbs is essential for smooth, stable movement.
-        Poor coordination is a strong predictor of fall risk, especially in
+        Poor coordination is a strong marker of balance-control performance, especially in
         complex movements or challenging environments.
         """
         features = {}
@@ -551,7 +551,7 @@ class AdvancedFeatureExtractor:
         Calculate postural sway metrics.
         
         Postural sway measures the movement of the body's center of gravity.
-        Excessive sway indicates poor balance control and increased fall risk.
+        Excessive sway indicates poor balance control and poorer balance performance.
         These metrics are fundamental in clinical balance assessment.
         """
         features = {}
@@ -582,13 +582,13 @@ class AdvancedFeatureExtractor:
                 
                 # sway_acceleration: Average acceleration of sway movement
                 # High accelerations indicate sudden, jerky movements
-                # Often associated with balance corrections and fall risk
+                # Often associated with balance corrections and poorer balance performance
                 features['sway_acceleration'] = self._calculate_sway_acceleration(hip_trajectory)
                 
                 # DIRECTIONAL SWAY ANALYSIS
                 # ml_sway: Medio-lateral (side-to-side) sway variability
                 # Standard deviation of horizontal movement
-                # Excessive ML sway is strongly associated with fall risk
+                # Excessive ML sway is strongly associated with poorer balance performance
                 features['ml_sway'] = np.std(hip_trajectory[:, 0])
                 
                 # ap_sway: Anterior-posterior (forward-backward) sway variability
@@ -604,7 +604,7 @@ class AdvancedFeatureExtractor:
         
         Joint coordination analyzes how well different joints work together
         during movement. Poor coordination between joints can indicate
-        neurological issues, musculoskeletal problems, or increased fall risk.
+        neurological issues, musculoskeletal problems, or poorer balance performance.
         """
         features = {}
         
@@ -762,7 +762,7 @@ class AdvancedFeatureExtractor:
         Calculate the area of postural sway.
         
         Sway area represents the area covered by the center of gravity trajectory.
-        Larger areas indicate greater postural instability and increased fall risk.
+        Larger areas indicate greater postural instability and poorer balance performance.
         """
         if len(trajectory) < 3:
             return 0
@@ -797,7 +797,7 @@ class AdvancedFeatureExtractor:
         
         Sway acceleration measures the rate of change of sway velocity.
         High accelerations indicate sudden, jerky movements often associated
-        with balance corrections and increased fall risk.
+        with balance corrections and poorer balance performance.
         """
         if len(trajectory) < 3:
             return 0
@@ -905,7 +905,7 @@ class AdvancedFeatureExtractor:
         
         This is the main method that orchestrates the extraction of all advanced features.
         It combines temporal, frequency, biomechanical, and interaction features to create
-        a comprehensive feature set for fall risk prediction.
+        a comprehensive feature set for balance-output modeling.
         
         Args:
             df: Preprocessed keypoint DataFrame for one subject

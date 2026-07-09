@@ -1,8 +1,8 @@
 """
-Data preprocessing module for fall risk prediction using MediaPipe keypoint data.
+Data preprocessing module for HUR balance-output modeling using MediaPipe keypoint data.
 
 This module provides comprehensive preprocessing functionality for MediaPipe Holistic
-pose landmark data used in fall risk prediction research. It handles the complete
+pose landmark data used in balance and exergame research. It handles the complete
 pipeline from raw data files to cleaned, structured datasets ready for machine learning.
 
 === DATA FORMAT OVERVIEW ===
@@ -20,7 +20,8 @@ MediaPipe Keypoints:
 - Covers face/head (0-10), upper body (11-22), lower body (23-32)
 
 Labels Format:
-- CSV file with Subject_ID and Fall_Risk_Category columns
+- CSV file with Subject_ID and Balance_Category columns
+- Legacy Fall_Risk_Category columns are accepted and renamed automatically
 - Subject IDs match the [eE]XX pattern from filenames
 
 === PREPROCESSING PIPELINE ===
@@ -53,12 +54,12 @@ Labels Format:
     # Load and preprocess all data
     keypoint_data, labels_df = load_and_preprocess_data(
         data_dir='RawData_Dance',
-        labels_file='fall_risk_categorization.csv'
+        labels_file='balance_categorization.csv'
     )
     
     # Access individual subject data
     subject_data = keypoint_data['E01']  # DataFrame for subject E01
-    fall_risk = labels_df[labels_df['Subject_ID'] == 'E01']['Fall_Risk_Category'].iloc[0]
+    balance_category = labels_df[labels_df['Subject_ID'] == 'E01']['Balance_Category'].iloc[0]
 
 === OUTPUT FORMAT ===
 
@@ -68,7 +69,7 @@ Processed keypoint data (per subject):
 - Timestamps normalized to start from 0
 - Ready for feature extraction and analysis
 
-This preprocessing ensures high-quality, consistent data for fall risk prediction
+This preprocessing ensures high-quality, consistent data for balance-output
 model training and evaluation.
 """
 
@@ -80,16 +81,22 @@ from typing import Tuple, List, Dict, Optional
 from tqdm import tqdm
 
 
+BALANCE_LABEL_COLUMN = 'Balance_Category'
+LEGACY_LABEL_COLUMN = 'Fall_Risk_Category'
+DEFAULT_LABELS_FILE = 'balance_categorization.csv'
+LEGACY_LABELS_FILE = 'fall_risk_categorization.csv'
+
+
 class DataPreprocessor:
     """
-    Main class for preprocessing MediaPipe keypoint data for fall risk prediction.
+    Main class for preprocessing MediaPipe keypoint data for balance-output modeling.
     
     This class encapsulates all the functionality needed to:
     1. Load raw keypoint data files from a directory
     2. Parse the complex keypoint format into structured DataFrames
     3. Clean and filter the data to remove noise and outliers
     4. Extract meaningful subject identifiers from filenames
-    5. Synchronize keypoint data with fall risk labels
+    5. Synchronize keypoint data with balance-output labels
     6. Prepare data for machine learning pipeline
     """
     
@@ -100,14 +107,26 @@ class DataPreprocessor:
         Args:
             data_dir: Directory containing raw keypoint data files (.txt format)
                      Each file represents one subject's movement recording
-            labels_file: Path to the CSV file containing fall risk categorizations
-                        Should have columns: Subject_ID, Fall_Risk_Category
+            labels_file: Path to the CSV file containing balance-output categories
+                        Should have columns: Subject_ID, Balance_Category.
+                        Legacy Fall_Risk_Category columns are accepted.
         """
-        # Store paths for data loading
         self.data_dir = data_dir
-        self.labels_file = labels_file
+        self.labels_file = self._resolve_labels_file(labels_file)
         # Initialize MediaPipe keypoint mapping for reference
         self.keypoint_names = self._get_mediapipe_keypoint_names()
+
+    def _resolve_labels_file(self, labels_file: str = None) -> str:
+        """
+        Resolve the preferred balance-output labels file, falling back to the legacy
+        fall-risk filename when callers use the new default and only legacy data exists.
+        """
+        labels_file = labels_file or DEFAULT_LABELS_FILE
+        if labels_file != DEFAULT_LABELS_FILE or os.path.exists(labels_file):
+            return labels_file
+
+        legacy_labels_file = os.path.join(os.path.dirname(labels_file), LEGACY_LABELS_FILE)
+        return legacy_labels_file if os.path.exists(legacy_labels_file) else labels_file
         
     def _get_mediapipe_keypoint_names(self) -> List[str]:
         """
@@ -115,7 +134,7 @@ class DataPreprocessor:
         
         MediaPipe Holistic provides 33 pose landmarks (indices 0-32) that represent
         key anatomical points on the human body. These landmarks are crucial for
-        movement analysis and fall risk assessment.
+        movement analysis and balance assessment.
         
         The landmarks cover:
         - Face/Head region (0-10): nose, eyes, ears, mouth
@@ -268,16 +287,24 @@ class DataPreprocessor:
     
     def load_labels(self) -> pd.DataFrame:
         """
-        Load fall risk categorization labels from CSV file.
+        Load balance-output categorization labels from CSV file.
         
         The labels file should contain at least two columns:
         - Subject_ID: Identifier matching the keypoint data files (e.g., "E01", "E33")
-        - Fall_Risk_Category: Classification (e.g., "Low", "Medium", "High")
+        - Balance_Category: Classification derived from the measured HUR balance output
+          (legacy Fall_Risk_Category files are renamed to Balance_Category)
         
         Returns:
-            DataFrame containing subject IDs and their fall risk categories
+            DataFrame containing subject IDs and their balance-output categories
         """
         labels_df = pd.read_csv(self.labels_file)
+        if BALANCE_LABEL_COLUMN not in labels_df.columns and LEGACY_LABEL_COLUMN in labels_df.columns:
+            labels_df = labels_df.rename(columns={LEGACY_LABEL_COLUMN: BALANCE_LABEL_COLUMN})
+        required_columns = {'Subject_ID', BALANCE_LABEL_COLUMN}
+        missing_columns = required_columns.difference(labels_df.columns)
+        if missing_columns:
+            missing = ', '.join(sorted(missing_columns))
+            raise ValueError(f"Labels file must contain columns: {missing}")
         return labels_df
     
     def load_all_keypoint_data(self) -> Dict[str, pd.DataFrame]:
@@ -373,7 +400,7 @@ class DataPreprocessor:
     
     def get_valid_subjects(self) -> List[str]:
         """
-        Get list of subjects that have both keypoint data and fall risk labels.
+        Get list of subjects that have both keypoint data and balance-output labels.
         
         This method performs data validation by cross-referencing subjects in the
         keypoint data files with subjects in the labels CSV. Only subjects that
@@ -515,34 +542,35 @@ class DataPreprocessor:
         return df
 
 
-def load_and_preprocess_data(data_dir: str = 'RawData_Dance', 
-                           labels_file: str = 'fall_risk_categorization.csv') -> Tuple[Dict[str, pd.DataFrame], pd.DataFrame]:
+def load_and_preprocess_data(data_dir: str = 'RawData_Dance',
+                           labels_file: str = DEFAULT_LABELS_FILE) -> Tuple[Dict[str, pd.DataFrame], pd.DataFrame]:
     """
-    Main function to load and preprocess the complete dataset for fall risk prediction.
+    Main function to load and preprocess the complete dataset for balance-output modeling.
     
     This function orchestrates the entire data preprocessing pipeline:
     1. Initialize the DataPreprocessor with data paths
-    2. Load fall risk labels from CSV file
+    2. Load balance-output labels from CSV file
     3. Load and parse all keypoint data files
     4. Apply preprocessing to each subject's data
     5. Filter labels to match available keypoint data
     6. Report final dataset statistics
     
     The function ensures data consistency by only including subjects that have
-    both keypoint data and fall risk labels, making the dataset ready for
+    both keypoint data and balance-output labels, making the dataset ready for
     machine learning model training and evaluation.
     
     Args:
         data_dir: Directory containing raw keypoint data files (.txt format)
                  Default: 'RawData_Dance' - expected to contain files like e01_*.txt
-        labels_file: Path to CSV file with fall risk categorizations
-                    Default: 'fall_risk_categorization.csv'
-                    Expected columns: Subject_ID, Fall_Risk_Category
+        labels_file: Path to CSV file with balance-output categories
+                    Default: 'balance_categorization.csv'
+                    Expected columns: Subject_ID, Balance_Category
+                    Legacy Fall_Risk_Category columns are accepted.
         
     Returns:
         Tuple containing:
         - keypoint_data_dict: Dictionary mapping subject IDs to preprocessed DataFrames
-        - labels_dataframe: DataFrame with Subject_ID and Fall_Risk_Category columns
+        - labels_dataframe: DataFrame with Subject_ID and Balance_Category columns
           filtered to only include subjects with valid keypoint data
           
     Example:
@@ -552,8 +580,8 @@ def load_and_preprocess_data(data_dir: str = 'RawData_Dance',
     # Initialize preprocessor with data paths
     preprocessor = DataPreprocessor(data_dir, labels_file)
     
-    # Step 1: Load fall risk categorization labels
-    print("Loading fall risk labels...")
+    # Step 1: Load balance-output categorization labels
+    print("Loading balance-output labels...")
     labels_df = preprocessor.load_labels()
     
     # Step 2: Load and parse all raw keypoint data files
@@ -578,8 +606,8 @@ def load_and_preprocess_data(data_dir: str = 'RawData_Dance',
     # Step 5: Report final dataset statistics
     print(f"\n=== Final Dataset Summary ===")
     print(f"Total subjects with valid data: {len(processed_keypoint_data)}")
-    print(f"Fall risk distribution:")
-    print(labels_df['Fall_Risk_Category'].value_counts())
+    print(f"Balance-output distribution:")
+    print(labels_df[BALANCE_LABEL_COLUMN].value_counts())
     
     return processed_keypoint_data, labels_df
 
@@ -783,7 +811,14 @@ if __name__ == "__main__":
     print("Loading and preprocessing all data...")
     
     # Execute the complete preprocessing pipeline
-    keypoint_data, labels_df = load_and_preprocess_data()
+    try:
+        keypoint_data, labels_df = load_and_preprocess_data()
+    except FileNotFoundError as e:
+        print(f"\nInput data not found: {e}")
+        print("Expected a balance label CSV such as 'balance_categorization.csv'")
+        print("or the legacy 'fall_risk_categorization.csv', plus the RawData_Dance folder.")
+        print("Add the study data files and rerun this script.")
+        raise SystemExit(1)
     
     print("\n=== Sample Subject Statistics ===")
     print("Showing detailed statistics for first 3 subjects:")
