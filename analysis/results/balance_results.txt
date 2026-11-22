@@ -1,0 +1,104 @@
+BALANCE RE-ANALYSIS  n=77 (Elevated=36, Low=41); 77 base -> 125 engineered features
+Majority-class (all 'Low') accuracy: 41/77 = 53.2% (95% CI 41.5-64.7)
+
+[LOOCV] BRF+SVM ensemble, augmentation=smote
+  Accuracy    47/77 = 61.0% (95% CI 49.2-72.0)
+  Sensitivity 20/36 = 55.6% (95% CI 38.1-72.1)  (Elevated = positive)
+  Specificity 27/41 = 65.9% (95% CI 49.4-79.9)
+  AUC 0.680 (95% CI 0.551-0.792, stratified bootstrap)
+  Confusion [rows=true Elevated/Low; cols=pred Elevated/Low]: [[20,16],[14,27]]
+
+[LOOCV] BRF+SVM ensemble, augmentation=none
+  Accuracy    45/77 = 58.4% (95% CI 46.6-69.6)
+  Sensitivity 18/36 = 50.0% (95% CI 32.9-67.1)  (Elevated = positive)
+  Specificity 27/41 = 65.9% (95% CI 49.4-79.9)
+  AUC 0.683 (95% CI 0.556-0.794, stratified bootstrap)
+  Confusion [rows=true Elevated/Low; cols=pred Elevated/Low]: [[18,18],[14,27]]
+
+[LOOCV] BRF+SVM ensemble, augmentation=mixup
+  Accuracy    44/77 = 57.1% (95% CI 45.4-68.4)
+  Sensitivity 20/36 = 55.6% (95% CI 38.1-72.1)  (Elevated = positive)
+  Specificity 24/41 = 58.5% (95% CI 42.1-73.7)
+  AUC 0.663 (95% CI 0.533-0.776, stratified bootstrap)
+  Confusion [rows=true Elevated/Low; cols=pred Elevated/Low]: [[20,16],[17,24]]
+
+[LOOCV] BRF only + SMOTE (the model the original ROC/AUC cell used)
+  Accuracy    50/77 = 64.9% (95% CI 53.2-75.5)
+  Sensitivity 24/36 = 66.7% (95% CI 49.0-81.4)  (Elevated = positive)
+  Specificity 26/41 = 63.4% (95% CI 46.9-77.9)
+  AUC 0.731 (95% CI 0.612-0.829, stratified bootstrap)
+  Confusion [rows=true Elevated/Low; cols=pred Elevated/Low]: [[24,12],[15,26]]
+
+McNemar SMOTE vs no-augmentation: discordant 3 vs 1, exact P=0.625
+
+[NESTED LOOCV] augmentation in {none,SMOTE,Mixup} x SVM C in {1,10,50} selected by inner 5-fold CV
+  Accuracy    46/77 = 59.7% (95% CI 47.9-70.8)
+  Sensitivity 20/36 = 55.6% (95% CI 38.1-72.1)  (Elevated = positive)
+  Specificity 26/41 = 63.4% (95% CI 46.9-77.9)
+  AUC 0.695 (95% CI 0.570-0.806, stratified bootstrap)
+  Confusion [rows=true Elevated/Low; cols=pred Elevated/Low]: [[20,16],[15,26]]
+  Configurations chosen across the 77 outer folds:
+    none/C=1: 18
+    smote/C=1: 15
+    none/C=50: 12
+    smote/C=10: 10
+    mixup/C=1: 7
+    smote/C=50: 5
+    none/C=10: 5
+    mixup/C=10: 3
+    mixup/C=50: 2
+
+[PERMUTATION] 500 label permutations, full LOOCV SMOTE pipeline re-run each time
+  observed accuracy 0.610; null mean 0.495 (95th pct 0.623); P = 0.072
+
+[CALIBRATION, LOOCV held-out probabilities, SMOTE ensemble, no recalibration]
+  Brier 0.227 (prevalence-only reference 0.249); mean predicted 0.477 vs observed 0.468
+  Calibration slope 0.85 (95% CI 0.24-1.67); ideal = 1
+  Reliability by quartile of predicted risk:
+                 n  mean_pred    obs
+bin                                 
+(0.152, 0.327]  20      0.259  0.200
+(0.327, 0.478]  19      0.419  0.421
+(0.478, 0.605]  19      0.536  0.526
+(0.605, 0.837]  19      0.707  0.737
+
+  Original isotonic-calibration cell: fit n=48, calibration n=13 (Elevated 6), test n=16 -- a single split, not LOOCV.
+
+[5-FOLD] aug=smote: original split (seed 42) 0.637 +/- 0.047 across folds; 20 repeats mean 0.612 (range 0.534-0.702)
+
+[5-FOLD] aug=none: original split (seed 42) 0.649 +/- 0.032 across folds; 20 repeats mean 0.615 (range 0.548-0.703)
+
+[LABELS] Elevated (higher composite sway) n=36; no participant between 0.324 and 0.335.
+  Trace Length / Mean Velocity ratio: median 30.01 (IQR 29.87-30.17); r = 0.9999 -> the two metrics are the same quantity (30-s trial), jointly 55% of the weight.
+  Composite score: median 0.321, IQR 0.152-0.504
+
+  Composite without the redundant Mean Velocity term: Spearman rho with original = 0.996
+
+  Spearman composite vs FRT: rho=-0.25, P=0.028
+
+  Spearman composite vs TUG: rho=0.26, P=0.023
+
+  Spearman composite vs FTSTS: rho=0.20, P=0.076
+
+  Spearman composite vs Handgrip R: rho=-0.02, P=0.833
+
+  Spearman composite vs MoCA: rho=-0.14, P=0.236
+
+  Spearman composite vs Age: rho=0.28, P=0.013
+
+[CUT-POINT SENSITIVITY] (LOOCV, same pipeline, duplicates excluded from normalisation)
+            cut  n_elevated   aug  majority   acc   auc  auc_lo  auc_hi
+           0.25          46  none     0.597 0.597 0.553   0.419   0.680
+           0.25          46 smote     0.597 0.506 0.527   0.396   0.655
+0.33 (original)          36  none     0.532 0.584 0.683   0.556   0.794
+0.33 (original)          36 smote     0.532 0.610 0.680   0.551   0.792
+           0.40          32  none     0.584 0.610 0.676   0.548   0.791
+           0.40          32 smote     0.584 0.662 0.684   0.561   0.800
+           0.50          20  none     0.740 0.714 0.726   0.603   0.842
+           0.50          20 smote     0.740 0.714 0.673   0.537   0.804
+         median          38  none     0.506 0.610 0.628   0.505   0.757
+         median          38 smote     0.506 0.636 0.661   0.538   0.783
+
+[CONTINUOUS COMPOSITE] LOOCV ridge (top-30 features in-fold): R2 0.027 (95% CI -0.247-0.185); Spearman(pred, obs) 0.245
+
+runtime 803s

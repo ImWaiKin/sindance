@@ -1,0 +1,43 @@
+COGNITIVE RE-ANALYSIS  n=81; MoCA range 11-30, mean 24.96 (SD 4.38)
+Education coded ordinally 0-4 (No formal < Primary < Secondary < ITE/Poly/JC < University).
+NOTE: the original notebooks LabelEncoded education alphabetically (ITE=0, No formal=1, Primary=2, Secondary=3, University=4),
+      i.e. not ordinal, and also used Weight, Height (median-imputed), falls, activity, marital, employment, ethnicity.
+
+[MODEL 1 AS PUBLISHED] notebook used ONE 85/15 train/test split (not LOOCV): test n = 13.
+  9/13 = 69.2%, 3/13 = 23.1% -> matches the reported 69.2% and 23.1%; R2/MAE were from these 13 people.
+
+
+[LOOCV, identical 81 splits, algorithm = RIDGE for every predictor set; all scaling/selection inside folds]
+  null (training-fold mean)          R2 -0.025 (-0.098 to -0.025)  MAE 3.38 (2.80-4.04)  +/-1: 8/81 (9.9%, 4-19)  +/-2: 20/81 (24.7%, 16-36)  +/-3: 39/81 (48.1%, 37-60)
+  demographics                       R2 +0.269 (+0.105 to +0.398)  MAE 2.68 (2.15-3.26)  +/-1: 19/81 (23.5%, 15-34)  +/-2: 43/81 (53.1%, 42-64)  +/-3: 55/81 (67.9%, 57-78)
+  demographics+physical              R2 +0.392 (+0.150 to +0.522)  MAE 2.44 (1.97-2.96)  +/-1: 25/81 (30.9%, 21-42)  +/-2: 45/81 (55.6%, 44-67)  +/-3: 57/81 (70.4%, 59-80)
+  dance only                         R2 +0.045 (-0.208 to +0.216)  MAE 3.21 (2.63-3.83)  +/-1: 14/81 (17.3%, 10-27)  +/-2: 31/81 (38.3%, 28-50)  +/-3: 50/81 (61.7%, 50-72)
+  demographics+dance                 R2 +0.203 (+0.001 to +0.318)  MAE 2.96 (2.43-3.53)  +/-1: 15/81 (18.5%, 11-29)  +/-2: 34/81 (42.0%, 31-53)  +/-3: 49/81 (60.5%, 49-71)
+  demographics+physical+dance        R2 +0.373 (+0.119 to +0.518)  MAE 2.52 (2.04-3.05)  +/-1: 26/81 (32.1%, 22-43)  +/-2: 45/81 (55.6%, 44-67)  +/-3: 55/81 (67.9%, 57-78)
+  Paired comparisons (bootstrap 95% CI; Wilcoxon on absolute errors):
+    demographics+dance  vs  demographics: dMAE +0.28 (+0.01 to +0.56), dR2 -0.066 (-0.198 to +0.029), Wilcoxon P=0.072
+    demographics+physical  vs  demographics: dMAE -0.24 (-0.53 to +0.07), dR2 +0.122 (-0.072 to +0.268), Wilcoxon P=0.213
+    demographics+physical+dance  vs  demographics+physical: dMAE +0.07 (-0.06 to +0.20), dR2 -0.018 (-0.067 to +0.024), Wilcoxon P=0.326
+    demographics+physical+dance  vs  demographics+dance: dMAE -0.44 (-0.75 to -0.10), dR2 +0.170 (+0.002 to +0.306), Wilcoxon P=0.005
+
+[LOOCV, identical 81 splits, algorithm = RF for every predictor set; all scaling/selection inside folds]
+  null (training-fold mean)          R2 -0.025 (-0.098 to -0.025)  MAE 3.38 (2.80-4.04)  +/-1: 8/81 (9.9%, 4-19)  +/-2: 20/81 (24.7%, 16-36)  +/-3: 39/81 (48.1%, 37-60)
+  demographics                       R2 +0.290 (+0.071 to +0.477)  MAE 2.38 (1.82-3.03)  +/-1: 32/81 (39.5%, 29-51)  +/-2: 49/81 (60.5%, 49-71)  +/-3: 59/81 (72.8%, 62-82)
+  demographics+physical              R2 +0.449 (+0.260 to +0.577)  MAE 2.17 (1.68-2.71)  +/-1: 29/81 (35.8%, 25-47)  +/-2: 52/81 (64.2%, 53-75)  +/-3: 63/81 (77.8%, 67-86)
+  dance only                         R2 +0.100 (-0.204 to +0.280)  MAE 3.19 (2.64-3.76)  +/-1: 16/81 (19.8%, 12-30)  +/-2: 30/81 (37.0%, 27-48)  +/-3: 46/81 (56.8%, 45-68)
+  demographics+dance                 R2 +0.281 (+0.066 to +0.400)  MAE 2.80 (2.29-3.33)  +/-1: 23/81 (28.4%, 19-40)  +/-2: 35/81 (43.2%, 32-55)  +/-3: 53/81 (65.4%, 54-76)
+  demographics+physical+dance        R2 +0.325 (+0.130 to +0.445)  MAE 2.65 (2.15-3.20)  +/-1: 20/81 (24.7%, 16-36)  +/-2: 38/81 (46.9%, 36-58)  +/-3: 58/81 (71.6%, 60-81)
+  Paired comparisons (bootstrap 95% CI; Wilcoxon on absolute errors):
+    demographics+dance  vs  demographics: dMAE +0.42 (-0.01 to +0.85), dR2 -0.010 (-0.291 to +0.210), Wilcoxon P=0.116
+    demographics+physical  vs  demographics: dMAE -0.22 (-0.57 to +0.11), dR2 +0.158 (-0.031 to +0.335), Wilcoxon P=0.288
+    demographics+physical+dance  vs  demographics+physical: dMAE +0.49 (+0.23 to +0.75), dR2 -0.124 (-0.267 to -0.020), Wilcoxon P=0.001
+    demographics+physical+dance  vs  demographics+dance: dMAE -0.15 (-0.30 to +0.00), dR2 +0.044 (-0.026 to +0.124), Wilcoxon P=0.017
+
+[PERMUTATION] ridge, dance-only, 200 permutations: observed R2 0.045, null 95th pct 0.002, P=0.015
+
+[FEATURES SELECTED IN >= 41 OF 81 FOLDS] (ridge; top 15 by F-score within each training fold)
+  dance only: foot_distance_std (81), base_support_std (81), ml_sway (81), interaction_mean_velocity_foot_distance_std (81), interaction_std_velocity_foot_distance_std (81), interaction_foot_distance_std_knee_angles_mean (81), interaction_foot_distance_std_core_mean_velocity (81), interaction_foot_distance_std_z_range (81), interaction_foot_distance_std_x_mean (81), interaction_foot_distance_std_mean_confidence (81), balance_coordination (81), base_support_mean (80), interaction_z_range_x_mean (79), interaction_x_mean_mean_confidence (79), x_mean (72)
+  demographics+dance: Age (81), Education_ord (81), foot_distance_std (81), base_support_std (81), ml_sway (81), interaction_mean_velocity_foot_distance_std (81), interaction_std_velocity_foot_distance_std (81), interaction_foot_distance_std_knee_angles_mean (81), interaction_foot_distance_std_core_mean_velocity (81), interaction_foot_distance_std_z_range (81), interaction_foot_distance_std_x_mean (81), interaction_foot_distance_std_mean_confidence (81), balance_coordination (81), base_support_mean (64), interaction_x_mean_mean_confidence (46)
+  demographics+physical+dance: Age (81), Education_ord (81), FRT (81), TUG (81), FTSTS (81), foot_distance_std (81), base_support_std (81), interaction_std_velocity_foot_distance_std (81), interaction_foot_distance_std_knee_angles_mean (81), interaction_foot_distance_std_z_range (81), interaction_foot_distance_std_x_mean (81), interaction_foot_distance_std_mean_confidence (81), balance_coordination (81), ml_sway (80), interaction_foot_distance_std_core_mean_velocity (47)
+
+runtime 31s

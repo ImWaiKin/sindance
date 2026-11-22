@@ -1,0 +1,64 @@
+predictor_set,feature,folds_selected,of_folds
+dance only,foot_distance_std,81,81
+dance only,base_support_std,81,81
+dance only,ml_sway,81,81
+dance only,interaction_mean_velocity_foot_distance_std,81,81
+dance only,interaction_std_velocity_foot_distance_std,81,81
+dance only,interaction_foot_distance_std_knee_angles_mean,81,81
+dance only,interaction_foot_distance_std_core_mean_velocity,81,81
+dance only,interaction_foot_distance_std_z_range,81,81
+dance only,interaction_foot_distance_std_x_mean,81,81
+dance only,interaction_foot_distance_std_mean_confidence,81,81
+dance only,balance_coordination,81,81
+dance only,base_support_mean,80,81
+dance only,interaction_z_range_x_mean,79,81
+dance only,interaction_x_mean_mean_confidence,79,81
+dance only,x_mean,72,81
+dance only,interaction_core_mean_velocity_x_mean,7,81
+dance only,spectral_spread,1,81
+dance only,left_leg_asymmetry,1,81
+dance only,sway_area,1,81
+dance only,sway_acceleration,1,81
+dance only,interaction_mean_velocity_x_mean,1,81
+dance only,interaction_std_velocity_x_mean,1,81
+dance only,velocity_cv,1,81
+demographics+dance,Age,81,81
+demographics+dance,Education_ord,81,81
+demographics+dance,foot_distance_std,81,81
+demographics+dance,base_support_std,81,81
+demographics+dance,ml_sway,81,81
+demographics+dance,interaction_mean_velocity_foot_distance_std,81,81
+demographics+dance,interaction_std_velocity_foot_distance_std,81,81
+demographics+dance,interaction_foot_distance_std_knee_angles_mean,81,81
+demographics+dance,interaction_foot_distance_std_core_mean_velocity,81,81
+demographics+dance,interaction_foot_distance_std_z_range,81,81
+demographics+dance,interaction_foot_distance_std_x_mean,81,81
+demographics+dance,interaction_foot_distance_std_mean_confidence,81,81
+demographics+dance,balance_coordination,81,81
+demographics+dance,base_support_mean,64,81
+demographics+dance,interaction_x_mean_mean_confidence,46,81
+demographics+dance,interaction_z_range_x_mean,33,81
+demographics+dance,x_mean,14,81
+demographics+dance,spectral_spread,1,81
+demographics+dance,left_leg_asymmetry,1,81
+demographics+dance,sway_area,1,81
+demographics+dance,interaction_mean_velocity_x_mean,1,81
+demographics+dance,interaction_core_mean_velocity_x_mean,1,81
+demographics+physical+dance,Age,81,81
+demographics+physical+dance,Education_ord,81,81
+demographics+physical+dance,FRT,81,81
+demographics+physical+dance,TUG,81,81
+demographics+physical+dance,FTSTS,81,81
+demographics+physical+dance,foot_distance_std,81,81
+demographics+physical+dance,base_support_std,81,81
+demographics+physical+dance,interaction_std_velocity_foot_distance_std,81,81
+demographics+physical+dance,interaction_foot_distance_std_knee_angles_mean,81,81
+demographics+physical+dance,interaction_foot_distance_std_z_range,81,81
+demographics+physical+dance,interaction_foot_distance_std_x_mean,81,81
+demographics+physical+dance,interaction_foot_distance_std_mean_confidence,81,81
+demographics+physical+dance,balance_coordination,81,81
+demographics+physical+dance,ml_sway,80,81
+demographics+physical+dance,interaction_foot_distance_std_core_mean_velocity,47,81
+demographics+physical+dance,interaction_mean_velocity_foot_distance_std,32,81
+demographics+physical+dance,interaction_x_mean_mean_confidence,2,81
+demographics+physical+dance,interaction_z_range_x_mean,1,81

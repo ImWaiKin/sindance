@@ -1,14 +1,15 @@
-pandas
-numpy
-matplotlib
+# Versions used for the revised analyses (analysis/), Python 3.9
+numpy==2.0.2
+pandas==2.3.3
+scipy==1.13.1
+scikit-learn==1.6.1
+imbalanced-learn==0.12.4
+joblib==1.5.3
+matplotlib==3.9.4
+
+# Additional packages needed only by the archived notebooks and feature-extraction scripts
 seaborn
-scikit-learn
-scipy
-imbalanced-learn
 lightgbm
 xgboost
-joblib
 tqdm
 jupyter
-nbformat
-nbclient

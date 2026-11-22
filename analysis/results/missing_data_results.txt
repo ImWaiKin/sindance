@@ -1,0 +1,31 @@
+MISSING DATA (n=81)
+Weight                  5
+Height                  6
+composite_risk_score    4
+
+Complete cases on all variables: 70/81
+
+Participants without HUR platform data: ['E78', 'E79', 'E80', 'E81']
+
+[LITTLE'S MCAR TEST] variables: Age, Gender_M, Education_ord, Weight, Height, FRT, TUG, FTSTS, Handgrip R, Handgrip L, MoCA, composite_risk_score
+  chi2 = 37.93, df = 43, P = 0.690
+  Missingness patterns (counts): 5 patterns; [70, 4, 4, 2, 1]
+
+  Balance-model variables only (Age, Gender_M, Education_ord, FRT, TUG, FTSTS, Handgrip R, MoCA, composite_risk_score): chi2 = 2.37, df = 8, P = 0.968
+
+[MISSING vs COMPLETE HUR DATA] (Mann-Whitney U; n=4 vs 77, descriptive only - very low power)
+  Age         missing median 71.0 vs complete median 74.0; P=0.315
+  FRT         missing median 23.5 vs complete median 22.5; P=0.802
+  TUG         missing median 9.6 vs complete median 9.5; P=0.853
+  FTSTS       missing median 13.1 vs complete median 11.6; P=0.446
+  Handgrip R  missing median 18.2 vs complete median 19.7; P=0.371
+  MoCA        missing median 27.0 vs complete median 27.0; P=0.660
+  Female: missing 3/4 vs complete 60/77
+
+[MULTIPLE IMPUTATION] m=20 chained-equation imputations (Bayesian ridge, posterior draws) of the 4 missing composite scores,
+  then 0.33 cut-point, then the full LOOCV SMOTE ensemble on n=81; pooled with Rubin's rules.
+  Elevated per imputation: 36-40 of 81
+  Pooled accuracy 0.601 (95% CI 0.481-0.720); pooled AUC 0.655 (95% CI 0.519-0.790)
+  Weight/Height (5/6 missing) are not predictors in the re-specified cognitive models; MoCA and all
+  cognitive-model predictors are complete, so the cognitive analyses (n=81) involve no imputation.
+

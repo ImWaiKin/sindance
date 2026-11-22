@@ -2,3 +2,10 @@
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
+.claude/
+.DS_Store
+# participant data are never committed
+data/
+*.joblib
+*.pkl
+*.npy
