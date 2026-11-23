@@ -64,13 +64,17 @@ def main():
     ids = d.loc[d['composite_risk_score'].isna(), 'Subject_ID'].tolist()
     out.append(f"Participants without HUR platform data: {ids}\n")
 
-    d2, df_, p, pats = little_mcar(d[vars_])
-    out.append(f"[LITTLE'S MCAR TEST] variables: {', '.join(vars_)}\n  chi2 = {d2:.2f}, df = {df_}, P = {p:.3f}\n"
+    # Primary test, as reported in the manuscript: age, education, sex, FRT, TUG, FTSTS, left and right
+    # handgrip strength, MoCA and balance group (1 = higher composite sway, 0 = lower; missing without platform data)
+    d['balance_group'] = (d['composite_risk_score'] > .33).astype(float).where(d['composite_risk_score'].notna())
+    mcar_vars = ['Age', 'Education_ord', 'Gender_M', 'FRT', 'TUG', 'FTSTS', 'Handgrip L', 'Handgrip R', 'MoCA', 'balance_group']
+    d2, df_, p, pats = little_mcar(d[mcar_vars])
+    out.append(f"[LITTLE'S MCAR TEST - MANUSCRIPT] variables: {', '.join(mcar_vars)}\n  chi2 = {d2:.2f}, df = {df_}, P = {p:.3f}\n"
                f"  Missingness patterns (counts): {len(pats)} patterns; {pats.values.tolist()}\n")
-    # balance-relevant subset only
-    sub = ['Age', 'Gender_M', 'Education_ord', 'FRT', 'TUG', 'FTSTS', 'Handgrip R', 'MoCA', 'composite_risk_score']
-    d2b, dfb, pb, _ = little_mcar(d[sub])
-    out.append(f"  Balance-model variables only ({', '.join(sub)}): chi2 = {d2b:.2f}, df = {dfb}, P = {pb:.3f}\n")
+    # Sensitivity: all recorded variables, including weight and height (not used in any model) and the continuous composite
+    d2b, dfb, pb, patsb = little_mcar(d[vars_])
+    out.append(f"  Sensitivity, all variables ({', '.join(vars_)}): chi2 = {d2b:.2f}, df = {dfb}, P = {pb:.3f}; "
+               f"{len(patsb)} missingness patterns\n")
 
     out.append("[MISSING vs COMPLETE HUR DATA] (Mann-Whitney U; n=4 vs 77, descriptive only - very low power)")
     g = d['composite_risk_score'].isna()

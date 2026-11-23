@@ -9,3 +9,6 @@ data/
 *.joblib
 *.pkl
 *.npy
+# manuscript drafts and reviewer correspondence are kept local
+*.docx
+~$*.docx
